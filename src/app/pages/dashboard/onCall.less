@@ -1,0 +1,54 @@
+.agent-dashboard {
+    .user-info{
+        margin: 20px 30px;
+        padding: 10px 20px;
+        .dormakaba-typography{
+            margin: 0;
+        }
+    }
+    .statistics {
+        margin: 20px 30px;
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: repeat(5, minmax(200px, 1fr));
+        .dormakaba-statistic{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 3px 6px #ccc;
+            border-radius: 5px;
+            .dormakaba-statistic-title{
+                font-size: 20px;
+                font-weight: 600;
+                color: rgb(141, 141, 141);
+            }
+            .dormakaba-statistic-content{
+                font-size: 30px;
+                font-weight: 600;
+                color: rgb(44, 33, 33);
+            }
+           
+        }
+
+    }
+    .content-area{
+        margin: 30px 30px;
+        .shadow-box{
+            min-height: 500px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 3px 6px #ccc;
+        }
+        #customerprofiles-container{
+            width: 100%;
+            min-height: 100vh;
+            iframe{
+                border: 0;
+                width: 100%;
+                min-height: 100vh;
+            }
+        }
+    }
+}

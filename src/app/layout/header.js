@@ -6,9 +6,12 @@ import './header.less';
 import { Link } from '@gatsbyjs/reach-router';
 const { Header, Content, Footer } = Layout;
 
-const AppMainHeader = ({ secondary }) => {
+const AppMainHeader = (props) => {
+    const {secondary,location} = props
     const { useToken } = theme
     const { token } = useToken()
+    const defaultKey=location.pathname.split('/')
+    console.log({defaultKey});
     const [active,setActive]=useState('home')
     return (
         <section className='app-main-header'>
@@ -51,19 +54,19 @@ const AppMainHeader = ({ secondary }) => {
                             items={[
                                 {
                                     key: 'home',
-                                    label: <Link to="/">Agent Call Center</Link>,
+                                    label: <a href="/">Agent Call Center</a>,
                                 },
                                 {
                                     key: 'ContactCenterAnalysis',
-                                    label: <Link to="/reports/cca">Contact Center Analysis</Link>,
+                                    label: <a href="/reports/cca">Contact Center Analysis</a>,
                                 },
                                 {
                                     key: 'ContactCenterVisualization',
-                                    label: <Link to="/reports/ccv">Contact Center Visualization</Link>,
+                                    label: <a href="/reports/ccv">Contact Center Visualization</a>,
                                 },
                                 {
                                     key: 'CallStatistics',
-                                    label: <Link to="/reports/cst">Call Statistics</Link>,
+                                    label: <a href="/reports/cst">Call Statistics</a>,
 
                                 }
                             ]}

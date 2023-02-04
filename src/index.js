@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 
 const App = React.lazy(() => import("./app/index"));
+const CustomerChat = React.lazy(() => import("./app/chat"));
 const root = document.getElementById("root");
 
 Amplify.configure(oldAwsConfig);
@@ -17,6 +18,7 @@ ReactDOM.render(
     <Suspense fallback={<Suspence />}>
       <Router basepath="/">
         <App path="/*" />      
+        <CustomerChat path="/test/chat/*" />      
       </Router>
     </Suspense>
   </Provider>,

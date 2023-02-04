@@ -14,7 +14,7 @@ import CallStatistics from './pages/dashboard/CallStatistics';
 const { Header, Content, Footer } = Layout;
 
 
-const AppMainPage = () => {
+const AppMainPage = (props) => {
     const [state, setState] = useState({
         isLoggedId: true,
     })
@@ -31,8 +31,8 @@ const AppMainPage = () => {
     return (
         <ConfigProvider prefixCls='dormakaba' theme={Apptheme} >
             <Layout className="app-master">
-                <AppMainHeader />
-                <AppMainHeader secondary={true} />
+                <AppMainHeader {...props}  />
+                <AppMainHeader secondary={true} {...props}  />
                 <Content className='master-content'>
                     {
                         state.isLoggedId ?
