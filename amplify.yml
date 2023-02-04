@@ -1,0 +1,19 @@
+version: 1
+env:
+  variables:
+    AMPLIFY_DIFF_BACKEND: true
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install --legacy-peer-deps
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
