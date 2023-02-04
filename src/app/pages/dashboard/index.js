@@ -87,7 +87,7 @@ const AgentDashboardPage = () => {
                     <Avatar icon={<UserOutlined />} size={64} />
                     <Space direction='vertical' size={0}>
                         <Typography.Title level={5}>Welcome, John Doe</Typography.Title>
-                        <Typography.Title level={3}>Pleasee review your action items</Typography.Title>
+                        <Typography.Title level={3}>Please review your action items</Typography.Title>
                     </Space>
                 </Space>
 
@@ -98,7 +98,7 @@ const AgentDashboardPage = () => {
                 <Statistic title="Pending Tasks" value={20} prefix={<CaretDownOutlined />} />
                 <Statistic title="Notifications" value={33} prefix={<AimOutlined />} />
                 <Statistic title="Calls taken" value={25} prefix={<UserOutlined />} />
-                <Statistic title="Calls taken" value={25} prefix={<UserOutlined />} />
+                <Statistic title="Calls missed" value={5} prefix={<UserOutlined />} />
             </div>
 
             <section className='content-area'>
