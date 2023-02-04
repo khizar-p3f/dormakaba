@@ -104,8 +104,8 @@ const AppIndexPage = () => {
             <div>
                 {
                     !onCall ?
-                    <AgentOnCall />
-                       /*  <AgentDashboardPage /> */
+
+                        <AgentDashboardPage />
                         :
                         <AgentOnCall />
                 }
