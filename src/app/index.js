@@ -16,16 +16,16 @@ const { Header, Content, Footer } = Layout;
 
 const AppMainPage = () => {
     const [state, setState] = useState({
-        isLoggedId: false,
+        isLoggedId: true,
     })
     useEffect(() => {
-        Auth.currentAuthenticatedUser().then((user) => {
+        /* Auth.currentAuthenticatedUser().then((user) => {
             setState({
                 isLoggedId: true
             })
         }).catch((err) => {
             console.error({ authErr: err });
-        })
+        }) */
     }, [])
 
     return (
