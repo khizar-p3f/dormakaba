@@ -54,19 +54,19 @@ const AppMainHeader = (props) => {
                             items={[
                                 {
                                     key: 'home',
-                                    label: <a href="/">Agent Call Center</a>,
+                                    label: <Link to="/">Agent Call Center</Link>,
                                 },
                                 {
                                     key: 'ContactCenterAnalysis',
-                                    label: <a href="/reports/cca">Contact Center Analysis</a>,
+                                    label: <Link to="/reports/cca">Contact Center Analysis</Link>,
                                 },
                                 {
                                     key: 'ContactCenterVisualization',
-                                    label: <a href="/reports/ccv">Contact Center Visualization</a>,
+                                    label: <Link to="/reports/ccv">Contact Center Visualization</Link>,
                                 },
                                 {
                                     key: 'CallStatistics',
-                                    label: <a href="/reports/cst">Call Statistics</a>,
+                                    label: <Link to="/reports/cst">Call Statistics</Link>,
 
                                 }
                             ]}
