@@ -6,7 +6,8 @@ import AgentDashboardPage from './dashboard';
 import '../../aws-streams/connect-streams'
 import './customCCP/index.less'
 import AgentOnCall from './dashboard/onCall';
-const AppIndexPage = () => {
+const AppIndexPage = (props) => {
+    const { supervisor } = props
     const ccp = useRef(null);
     const [ccpInitiated, setCcpInitiated] = useState(false);
     const [onCall, setonCall] = useState(false);
@@ -105,7 +106,7 @@ const AppIndexPage = () => {
                 {
                     !onCall ?
 
-                        <AgentDashboardPage />
+                        <AgentDashboardPage  supervisor={supervisor} />
                         :
                         <AgentOnCall />
                 }

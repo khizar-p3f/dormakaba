@@ -15,8 +15,10 @@ const { Header, Content, Footer } = Layout;
 
 
 const AppMainPage = (props) => {
+    const supervisor = props.location.pathname.includes('supervisor')
     const [state, setState] = useState({
         isLoggedId: true,
+        supervisor: supervisor
     })
     useEffect(() => {
         /* Auth.currentAuthenticatedUser().then((user) => {
@@ -31,16 +33,20 @@ const AppMainPage = (props) => {
     return (
         <ConfigProvider prefixCls='dormakaba' theme={Apptheme} >
             <Layout className="app-master">
-                <AppMainHeader {...props}  />
-                <AppMainHeader secondary={true} {...props}  />
+                <AppMainHeader {...props}  supervisor={supervisor} />
+                <AppMainHeader secondary={true} {...props} supervisor={supervisor}  />
                 <Content className='master-content'>
                     {
                         state.isLoggedId ?
                             <Router>
-                                <AppIndexPage path="/" />
+                                <AppIndexPage path="/"  supervisor={supervisor}  />
+                                <AppIndexPage path="/supervisor/*" supervisor={supervisor} />
                                 <ContactCenterAnalysis path="/reports/cca" />
                                 <ContactCenterVisualization path="/reports/ccv" />
                                 <CallStatistics path="/reports/cst" />
+                                <ContactCenterAnalysis path="/supervisor/reports/cca" />
+                                <ContactCenterVisualization path="/supervisor/reports/ccv" />
+                                <CallStatistics path="/supervisor/reports/cst" />
                                 <AppLoginPage path="/login/*" />
                             </Router>
                             :
