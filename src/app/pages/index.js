@@ -6,11 +6,22 @@ import AgentDashboardPage from './dashboard';
 import '../../aws-streams/connect-streams'
 import './customCCP/index.less'
 import AgentOnCall from './dashboard/onCall';
+import { Button, Dropdown, notification, Space,theme } from 'antd';
+import { UserOutlined, InfoCircleOutlined, UsergroupDeleteOutlined, AlertOutlined } from '@ant-design/icons';
+
+
+
 const AppIndexPage = (props) => {
     const { supervisor } = props
     const ccp = useRef(null);
     const [ccpInitiated, setCcpInitiated] = useState(false);
     const [onCall, setonCall] = useState(false);
+    const [agent, setAgent] = useState(null);
+    const [state, setState] = useState({
+        status: null
+    })
+    const {useToken} =theme
+    const {token} =useToken()
 
     useEffect(() => {
         initiateCCP();
@@ -40,6 +51,10 @@ const AppIndexPage = (props) => {
                 listenIncomingActivities()
                 console.log(`Presolved::CCP::Login success stoppping the poll`);
                 setCcpInitiated(true)
+                connect.agent((agent) => {
+                    setAgent(agent)
+                    setState({ ...state, status: agent.getStatus().name })
+                })
             }
             if (i > 30) {
                 clearInterval(PollInterval)
@@ -92,25 +107,66 @@ const AppIndexPage = (props) => {
         });
 
     }
+    const goOffline = () => {
+        var offlineState = agent.getAgentStates().filter(function (state) {
+            return state.type === connect.AgentStateType.OFFLINE;
+        })[0];
+
+        agent.setState(offlineState, {
+            success: function () {
+                notification.success({ message: "Set agent status to Offline." })
+                setState({ ...state, status: "Offline" })
+            },
+            failure: function () {
+                notification.info({ message: "Failed to set agent status to Offline." })
+            }
+        });
+    }
+    const goAvailable = () => {
+        var availableState = agent.getAgentStates().filter(function (state) {
+            return state.type === connect.AgentStateType.ROUTABLE;
+        })[0];
+
+        agent.setState(availableState, {
+            success: function () {
+                notification.success({ message: "Set agent status to Available." })
+                setState({ ...state, status: "Available" })
+            },
+            failure: function () {
+                notification.info({ message: "Failed to set agent status to Available." })
+            }
+        });
+    }
+    const items = [
+        {
+            key: '1',
+            label: <Space><UserOutlined />Available</Space>,
+            onClick: () => goAvailable()
+
+        },
+        {
+            key: '2',
+            label: <Space><UsergroupDeleteOutlined />Offline</Space>,
+            onClick: () => goOffline()
+        },
+
+    ];
     return (
         <SplitPane split="vertical">
             <div>
                 <div className='custom-ccp'>
-                    <div className='hide-header'></div>
+                    <div className='hide-header' style={{background:state.status =="Available" ? token.colorBgBase : token.colorWarningBg}} >
+                        <Dropdown menu={{ items, }}>
+                            <Button style={{ marginTop: 10, fontSize:16 }} type='link' icon={<AlertOutlined />} >{state.status}</Button>
+                        </Dropdown>
+                    </div>
                     <div ref={ccp} id="iframe1" className="ccp-panel" >
 
                     </div>
                 </div>
             </div>
             <div>
-                {
-                    !onCall ?
-
-                        <AgentDashboardPage  supervisor={supervisor} />
-                        :
-                        <AgentOnCall />
-                }
-
+                {!onCall ? <AgentDashboardPage supervisor={supervisor} /> : <AgentOnCall />}
             </div>
 
 

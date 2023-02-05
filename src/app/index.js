@@ -11,6 +11,7 @@ import AppLoginPage from './pages/login';
 import ContactCenterAnalysis from './pages/dashboard/contactCenterAnalysis';
 import ContactCenterVisualization from './pages/dashboard/contactCenterVisualization';
 import CallStatistics from './pages/dashboard/CallStatistics';
+import ContactSurvey from './pages/dashboard/survey';
 const { Header, Content, Footer } = Layout;
 
 
@@ -47,6 +48,7 @@ const AppMainPage = (props) => {
                                 <ContactCenterAnalysis path="/supervisor/reports/cca" />
                                 <ContactCenterVisualization path="/supervisor/reports/ccv" />
                                 <CallStatistics path="/supervisor/reports/cst" />
+                                <ContactSurvey path="/supervisor/reports/survey" />
                                 <AppLoginPage path="/login/*" />
                             </Router>
                             :

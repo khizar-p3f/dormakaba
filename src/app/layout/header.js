@@ -23,7 +23,7 @@ const AppMainHeader = (props) => {
         <section className='app-main-header'>
             {!secondary ?
                 <Header style={{ backgroundColor: token.colorBgBase }}  >
-                    <div className="logo" > <Link to="/"><img src={logo} alt="logo" height={30} /></Link></div>
+                    <div className="logo" > <Link to={supervisor ? "/supervisor/" : "/"}><img src={logo} alt="logo" height={30} /></Link></div>
                     <div className='menu'>
                         {
                             supervisor &&
@@ -89,7 +89,7 @@ const AppMainHeader = (props) => {
                                     [
                                         {
                                             key: 'home',
-                                            label: <Link to="/">Agent Call Center</Link>,
+                                            label: <Link to="/supervisor/">Agent Call Center</Link>,
                                         },
                                         {
                                             key: 'ContactCenterAnalysis',
@@ -103,7 +103,12 @@ const AppMainHeader = (props) => {
                                             key: 'CallStatistics',
                                             label: <Link to={supervisor ? "/supervisor/reports/cst" : "/reports/cst"}>Call Statistics</Link>,
 
-                                        }
+                                        },
+                                        {
+                                            key: 'survey',
+                                            label: <Link to={supervisor ? "/supervisor/reports/survey/" : "/reports/survey"}>Survey</Link>,
+
+                                        },
                                     ]
                                     :
                                     [

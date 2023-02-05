@@ -3,11 +3,13 @@ import {
     Form, Radio
 
 } from 'antd'
-import { HomeOutlined, UserOutlined, InfoCircleOutlined , ShopOutlined, AimOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, InfoCircleOutlined, ShopOutlined, AimOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useEffect, useRef, useState } from 'react'
 import './onCall.less'
 import '../../../aws-streams/amazon-connect-customer-profiles'
+import '../../../aws-streams/amazon-connect-wisdomjs'
 
+const instanceUrl = 'https://p3fusion-dormakaba.my.connect.aws'
 const AgentOnCall = () => {
     const ccp = useRef(null);
 
@@ -17,7 +19,7 @@ const AgentOnCall = () => {
 
     const initiateCCP = () => {
         if (ccp.current) {
-            const instanceUrl = 'https://p3fusion-dormakaba.my.connect.aws'
+
             let client = new connect.CustomerProfilesClient(instanceUrl);
         }
     }
@@ -55,7 +57,7 @@ const AgentOnCall = () => {
             <section className='content-area'>
                 <Tabs
                     type="editable-card"
-                  
+
                     items={initialItems}
                 />
 
@@ -72,6 +74,24 @@ const WisdomWidget = () => {
     const onRequiredTypeChange = ({ requiredMarkValue }) => {
         setRequiredMarkType(requiredMarkValue);
     };
+    useEffect(() => {
+        initiateWisdom()
+    }, [])
+
+    const initiateWisdom = () => {
+
+        const wisdomClient = new connect.wisdomjs.Client({
+            instanceUrl: "https://p3fusion-dormakaba.my.connect.aws",                                        // REQUIRED
+            endpoint: "https://p3fusion-dormakaba.my.connect.aws/connect/api",  // optional, defaults to '<instanceUrl>'
+            callSource: "agent-app",                                         // optional, defaults to 'agent-app'
+            serviceId: 'Wisdom',                                             // optional, defaults to 'Wisdom'
+            maxAttempts: 3,                                                  // optional, defaults to 3
+            logger: {},                                                      // optional, if provided overrides default logger
+            headers: {},                                                     // optional, if provided overrides request headers
+            requestHandler: {},                                              // optional, if provided overrides the default request handler
+        });
+    }
+
     return (
         <Form
             form={form}
@@ -92,7 +112,7 @@ const WisdomWidget = () => {
             <Form.Item label="Search Query Here" required tooltip="This is a required field">
                 <Input placeholder="input your Query Here" />
             </Form.Item>
-            
+
             <Form.Item>
                 <Button type="primary">Submit</Button>
             </Form.Item>
