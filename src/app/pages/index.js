@@ -155,18 +155,18 @@ const AppIndexPage = (props) => {
         <SplitPane split="vertical">
             <div style={{backgroundColor:'#f2f2f2'}}>
                 <div className='custom-ccp' style={{backgroundColor:'#f2f2f2'}}>
-                    <div className='hide-header' style={{background:state.status =="Available" ? token.colorBgBase : token.colorWarningBg}} >
+                  {/*   <div className='hide-header' style={{background:state.status =="Available" ? token.colorBgBase : token.colorWarningBg}} >
                         <Dropdown menu={{ items, }}>
                             <Button style={{ marginTop: 10, fontSize:16 }} type='link' icon={<AlertOutlined />} >{state.status}</Button>
                         </Dropdown>
-                    </div>
+                    </div> */}
                     <div ref={ccp} id="iframe1" className="ccp-panel" style={{backgroundColor:'#f2f2f2'}} >
 
                     </div>
                 </div>
             </div>
             <div>
-                {!onCall ? <AgentDashboardPage supervisor={supervisor} /> : <AgentOnCall />}
+                {!onCall ? <AgentOnCall /> /* <AgentDashboardPage supervisor={supervisor} /> */ : <AgentOnCall />}
             </div>
 
 

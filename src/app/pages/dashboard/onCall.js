@@ -10,6 +10,10 @@ import '../../../aws-streams/amazon-connect-customer-profiles'
 import '../../../aws-streams/amazon-connect-wisdomjs'
 
 const instanceUrl = 'https://p3fusion-dormakaba.my.connect.aws'
+
+let wisdomClient = new connect.wisdomjs.WisdomClient({ instanceUrl: instanceUrl });
+
+console.log({ wisdomClient });
 const AgentOnCall = () => {
     const ccp = useRef(null);
 
@@ -21,6 +25,7 @@ const AgentOnCall = () => {
         if (ccp.current) {
 
             let client = new connect.CustomerProfilesClient(instanceUrl);
+
         }
     }
     const initialItems = [
@@ -75,25 +80,57 @@ const WisdomWidget = () => {
         setRequiredMarkType(requiredMarkValue);
     };
     useEffect(() => {
-        initiateWisdom()
+        connect.agentApp.initApp(
+            "wisdom",
+            "wisdom-container",
+            instanceUrl + "/wisdom-v2/",
+            { style: "width:400px; height:600px;" }
+        );
+        //initiateWisdom()
     }, [])
 
-    const initiateWisdom = () => {
-
-        const wisdomClient = new connect.wisdomjs.Client({
-            instanceUrl: "https://p3fusion-dormakaba.my.connect.aws",                                        // REQUIRED
-            endpoint: "https://p3fusion-dormakaba.my.connect.aws/connect/api",  // optional, defaults to '<instanceUrl>'
-            callSource: "agent-app",                                         // optional, defaults to 'agent-app'
-            serviceId: 'Wisdom',                                             // optional, defaults to 'Wisdom'
-            maxAttempts: 3,                                                  // optional, defaults to 3
-            logger: {},                                                      // optional, if provided overrides default logger
-            headers: {},                                                     // optional, if provided overrides request headers
-            requestHandler: {},                                              // optional, if provided overrides the default request handler
-        });
+    const initiateWisdom = (values = "clinic") => {
+      
+        /*  wisdomClient = new connect.wisdomjs.Client({
+             instanceUrl: instanceUrl,                                        // REQUIRED            
+             callSource: "agent-app",                                         // optional, defaults to 'agent-app'
+             serviceId: 'Wisdom',                                             // optional, defaults to 'Wisdom'
+             maxAttempts: 3,                                                  // optional, defaults to 3
+             logger: {},                                                      // optional, if provided overrides default logger
+             headers: {},                                                     // optional, if provided overrides request headers
+             requestHandler: {},                                              // optional, if provided overrides the default request handler
+         });
+         if (wisdomClient) {
+             wisdomClient.getRecommendations({
+                 query: values,
+                 maxResults: 10,
+                 maxSuggestions: 10,
+                 maxDocuments: 10,
+ 
+             }).then((knowledgeBase) => {
+                 console.log({ knowledgeBase });
+ 
+                 console.log("*******stopping poplling wisdom client ********");
+             }).catch((error) => {
+                 console.log({ error });
+ 
+                 console.log("*******stopping poplling wisdom client ********");
+             });
+         } */
+    }
+    const onFinish = (values) => {
+        console.log({ values });
+        initiateWisdom(values.query)
     }
 
     return (
-        <Form
+        <div>
+        <div id="wisdom-container" className='wisdom-container'>
+
+        </div>
+       
+       {/*  <Form
+            onFinish={onFinish}
             form={form}
             layout="vertical"
             initialValues={{
@@ -109,14 +146,17 @@ const WisdomWidget = () => {
                     <Radio.Button value={false}>Match Term</Radio.Button>
                 </Radio.Group>
             </Form.Item>
-            <Form.Item label="Search Query Here" required tooltip="This is a required field">
+            <Form.Item name="query" label="Search Query Here" required tooltip="This is a required field">
                 <Input placeholder="input your Query Here" />
             </Form.Item>
 
             <Form.Item>
                 <Button type="primary">Submit</Button>
             </Form.Item>
-        </Form>
+            
+        </Form>> */}
+        </div>
+
     )
 
 }
