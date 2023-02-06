@@ -166,7 +166,7 @@ const AppIndexPage = (props) => {
                 </div>
             </div>
             <div>
-                {!onCall ? <AgentOnCall /> /* <AgentDashboardPage supervisor={supervisor} /> */ : <AgentOnCall />}
+                {!onCall ?  <AgentDashboardPage supervisor={supervisor} />  : <AgentOnCall />}
             </div>
 
 

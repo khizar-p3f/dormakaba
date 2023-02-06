@@ -1,6 +1,6 @@
 import {
-    Avatar, Breadcrumb, Tabs, Button, Card, Col, Divider, Empty, Input, Row, Space, Statistic, Table, Typography,
-    Form, Radio
+	Avatar, Breadcrumb, Tabs, Button, Card, Col, Divider, Empty, Input, Row, Space, Statistic, Table, Typography,
+	Form, Radio
 
 } from 'antd'
 import { HomeOutlined, UserOutlined, InfoCircleOutlined, ShopOutlined, AimOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -15,121 +15,121 @@ let wisdomClient = new connect.wisdomjs.WisdomClient({ instanceUrl: instanceUrl 
 
 console.log({ wisdomClient });
 const AgentOnCall = () => {
-    const ccp = useRef(null);
+	const ccp = useRef(null);
 
-    useEffect(() => {
-        initiateCCP();
-    }, [])
+	useEffect(() => {
+		initiateCCP();
+	}, [])
 
-    const initiateCCP = () => {
-        if (ccp.current) {
+	const initiateCCP = () => {
+		if (ccp.current) {
 
-            let client = new connect.CustomerProfilesClient(instanceUrl);
+			let client = new connect.CustomerProfilesClient(instanceUrl);
 
-        }
-    }
-    const initialItems = [
-        {
-            label: 'Customer Profile',
-            children: <Row gutter={[16, 16]}><Divider /><div id={`customerprofiles-container`} ref={ccp} /> </Row>,
-            key: 'customerProfile',
-        },
-        {
-            label: 'Wisdom',
-            children: <WisdomWidget />,
-            key: 'wisdom',
-        }
-    ];
-
-
-    return (
-        <section className='agent-dashboard'>
-
-            <div className='bread-crumbs'>
-                <Breadcrumb>
-                    <Breadcrumb.Item href="">
-                        <HomeOutlined />
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item href="">
-                        <UserOutlined />
-                        <span>Agent</span>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-                </Breadcrumb>
-            </div>
+		}
+	}
+	const initialItems = [
+		{
+			label: 'Customer Profile',
+			children: <Row gutter={[16, 16]}><Divider /><div id={`customerprofiles-container`} ref={ccp} /> </Row>,
+			key: 'customerProfile',
+		},
+		{
+			label: 'Wisdom',
+			children: <WisdomWidget />,
+			key: 'wisdom',
+		}
+	];
 
 
-            <section className='content-area'>
-                <Tabs
-                    type="editable-card"
+	return (
+		<section className='agent-dashboard'>
 
-                    items={initialItems}
-                />
+			<div className='bread-crumbs'>
+				<Breadcrumb>
+					<Breadcrumb.Item href="">
+						<HomeOutlined />
+					</Breadcrumb.Item>
+					<Breadcrumb.Item href="">
+						<UserOutlined />
+						<span>Agent</span>
+					</Breadcrumb.Item>
+					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+				</Breadcrumb>
+			</div>
 
-            </section>
+
+			<section className='content-area'>
+				<Tabs
+					type="editable-card"
+
+					items={initialItems}
+				/>
+
+			</section>
 
 
-        </section>
-    )
+		</section>
+	)
 }
 
 const WisdomWidget = () => {
-    const [form] = Form.useForm();
-    const [requiredMark, setRequiredMarkType] = useState('optional');
-    const onRequiredTypeChange = ({ requiredMarkValue }) => {
-        setRequiredMarkType(requiredMarkValue);
-    };
-    useEffect(() => {
-        connect.agentApp.initApp(
-            "wisdom",
-            "wisdom-container",
-            instanceUrl + "/wisdom-v2/",
-            { style: "width:400px; height:600px;" }
-        );
-        //initiateWisdom()
-    }, [])
+	const [form] = Form.useForm();
+	const [requiredMark, setRequiredMarkType] = useState('optional');
+	const onRequiredTypeChange = ({ requiredMarkValue }) => {
+		setRequiredMarkType(requiredMarkValue);
+	};
+	useEffect(() => {
+		connect.agentApp.initApp(
+			"wisdom",
+			"wisdom-container",
+			instanceUrl + "/wisdom-v2/",
+			{}
+		);
+		//initiateWisdom()
+	}, [])
 
-    const initiateWisdom = (values = "clinic") => {
-      
-        /*  wisdomClient = new connect.wisdomjs.Client({
-             instanceUrl: instanceUrl,                                        // REQUIRED            
-             callSource: "agent-app",                                         // optional, defaults to 'agent-app'
-             serviceId: 'Wisdom',                                             // optional, defaults to 'Wisdom'
-             maxAttempts: 3,                                                  // optional, defaults to 3
-             logger: {},                                                      // optional, if provided overrides default logger
-             headers: {},                                                     // optional, if provided overrides request headers
-             requestHandler: {},                                              // optional, if provided overrides the default request handler
-         });
-         if (wisdomClient) {
-             wisdomClient.getRecommendations({
-                 query: values,
-                 maxResults: 10,
-                 maxSuggestions: 10,
-                 maxDocuments: 10,
- 
-             }).then((knowledgeBase) => {
-                 console.log({ knowledgeBase });
- 
-                 console.log("*******stopping poplling wisdom client ********");
-             }).catch((error) => {
-                 console.log({ error });
- 
-                 console.log("*******stopping poplling wisdom client ********");
-             });
-         } */
-    }
-    const onFinish = (values) => {
-        console.log({ values });
-        initiateWisdom(values.query)
-    }
+	const initiateWisdom = (values = "clinic") => {
 
-    return (
-        <div>
-        <div id="wisdom-container" className='wisdom-container'>
+		/*  wisdomClient = new connect.wisdomjs.Client({
+			 instanceUrl: instanceUrl,                                        // REQUIRED            
+			 callSource: "agent-app",                                         // optional, defaults to 'agent-app'
+			 serviceId: 'Wisdom',                                             // optional, defaults to 'Wisdom'
+			 maxAttempts: 3,                                                  // optional, defaults to 3
+			 logger: {},                                                      // optional, if provided overrides default logger
+			 headers: {},                                                     // optional, if provided overrides request headers
+			 requestHandler: {},                                              // optional, if provided overrides the default request handler
+		 });
+		 if (wisdomClient) {
+			 wisdomClient.getRecommendations({
+				 query: values,
+				 maxResults: 10,
+				 maxSuggestions: 10,
+				 maxDocuments: 10,
+ 
+			 }).then((knowledgeBase) => {
+				 console.log({ knowledgeBase });
+ 
+				 console.log("*******stopping poplling wisdom client ********");
+			 }).catch((error) => {
+				 console.log({ error });
+ 
+				 console.log("*******stopping poplling wisdom client ********");
+			 });
+		 } */
+	}
+	const onFinish = (values) => {
+		console.log({ values });
+		initiateWisdom(values.query)
+	}
 
-        </div>
-       
-       {/*  <Form
+	return (
+		<div>
+			<div id="wisdom-container" className='wisdom-container'>
+
+			</div>
+
+			{/*  <Form
             onFinish={onFinish}
             form={form}
             layout="vertical"
@@ -155,9 +155,9 @@ const WisdomWidget = () => {
             </Form.Item>
             
         </Form>> */}
-        </div>
+		</div>
 
-    )
+	)
 
 }
 export default AgentOnCall
