@@ -9,6 +9,8 @@ import recordingImg from '../images/rec.gif'
 const { Header, Content, Footer } = Layout;
 
 const AppMainHeader = (props) => {
+ 
+
     const { secondary, location, supervisor } = props
     const { useToken } = theme
     const { token } = useToken()
@@ -16,7 +18,65 @@ const AppMainHeader = (props) => {
     console.log({ defaultKey });
     const [active, setActive] = useState('home')
     const [recording, setRecording] = useState(false)
+    const [MR, setMR] = useState(null);
+    
+    const captureScreenshot = async () => {
+        const video = document.querySelector('video');
+        const canvas = document.createElement('canvas');
+        canvas.width =640;
+        canvas.height = 480;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        const blob = await fetch(dataURL).then(r => r.blob());
+        const item = new ClipboardItem({ 'image/png': blob });
+        await navigator.clipboard.write([item]);
+        // save the image to the downloads folder
+        window.location.href(dataURL)
+    };   
 
+
+    const recordScreen = async () => {
+        return await navigator.mediaDevices.getDisplayMedia({
+            audio:  false,
+            video: { mediaSource: "screen" }
+        });
+    }
+    
+    
+    const createRecorder = (stream, mimeType) => {
+        // the stream data is stored in this array
+        let recordedChunks = [];
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = function (e) {
+            if (e.data.size > 0) {
+                recordedChunks.push(e.data);
+            }
+        }
+        mediaRecorder.onstop = function () {
+            saveFile(recordedChunks);
+            recordedChunks = [];
+        }
+        mediaRecorder.start(200); // For every 200ms the stream data will be stored in a separate chunk.
+        return mediaRecorder;
+    }
+
+    const startRecording = async () => {
+        let stream = await recordScreen();
+        let mimeType = 'video/webm';
+        let mediaRecorder = createRecorder(stream, mimeType);
+        setMR(mediaRecorder)
+        setRecording(true)
+    }
+    const stopRecording = () => {
+        MR.stop();        
+        setRecording(false)
+    }
+    const saveFile = (recordedChunks) => {
+        const blob = new Blob(recordedChunks, {
+            type: 'video/webm'
+        });
+        window.open(URL.createObjectURL(blob));       
+    }
 
 
     return (
@@ -58,12 +118,12 @@ const AppMainHeader = (props) => {
                         <Space size={10}>
                             {
                                 recording ?
-                                <Button onClick={()=>setRecording(false)}  type='default'  icon={<img src={recordingImg} height={25} />} shape='round'  >&nbsp;Recording </Button>
+                                <Button onClick={()=>stopRecording()}  type='default'  icon={<img src={recordingImg} height={25} />} shape='round'  >&nbsp;Recording </Button>
                                :
-                            <Button onClick={()=>setRecording(true)}  type='default' icon={<VideoCameraOutlined />} shape='round'  >Record</Button>
+                            <Button onClick={()=>startRecording()}  type='default' icon={<VideoCameraOutlined />} shape='round'  >Record</Button>
                             }
                           
-                        <Button type='link'>
+                        <Button type='link' onClick={()=>captureScreenshot()}>
                             <Space>
                                 <Avatar style={{ backgroundColor: token.colorError }} icon={<UserOutlined />} />
                                 {
