@@ -207,13 +207,16 @@ const AppIndexPage = (props) => {
     }
 
     const performQuickConnect = (item) => {
-        var endpoint = connect.Endpoint.byPhoneNumber('+16028122928');
-        contact.toSnapshot((snapshot) => {
-            console.log("Presolved::connect::contact::toSnapshot::", snapshot);
-        })
+        var endpoint = connect.Endpoint.byPhoneNumber('+16028122928');   
         contact.addConnection(endpoint, {
             success: function () {
                 console.log("Presolved::connect::contact::addConnection::success::",);
+                setState({ ...state, teamsInitiated: false })
+                setShowTeamsModal(false)
+                notification.success({ 
+                    message: "Call transfered to Teams",
+                    description: "Call transfered to Teams",
+                })
             },
             failure: function (err) {
                 console.log("Presolved::connect::contact::addConnection::failure::", err);
