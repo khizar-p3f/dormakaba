@@ -29,6 +29,7 @@ const AppMainPage = (props) => {
         }).catch((err) => {
             console.error({ authErr: err });
         }) */
+       
     }, [])
 
     return (

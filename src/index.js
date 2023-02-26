@@ -10,7 +10,9 @@ import { store } from "./store";
 const App = React.lazy(() => import("./app/index"));
 const CustomerChat = React.lazy(() => import("./app/chat"));
 const root = document.getElementById("root");
-
+window.khizar={
+  appIsLoaded:false,
+}
 Amplify.configure(oldAwsConfig);
 
 ReactDOM.render(

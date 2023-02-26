@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Breadcrumb, Button, Layout, Menu, Space, theme, Typography } from 'antd';
 import logo from '../images/logo.png';
 import { UserOutlined } from '@ant-design/icons'
@@ -20,6 +20,16 @@ const AppMainHeader = (props) => {
     const [recording, setRecording] = useState(false)
     const [MR, setMR] = useState(null);
     
+    useEffect(() => {
+      window.khizar={
+        ...window.khizar,
+        screenRecordingLoaded:true,
+      }
+    
+     
+    }, [])
+    
+
     const captureScreenshot = async () => {
         const video = document.querySelector('video');
         const canvas = document.createElement('canvas');
