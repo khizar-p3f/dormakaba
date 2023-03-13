@@ -6,14 +6,16 @@ import AgentDashboardPage from './dashboard';
 import '../../aws-streams/connect-streams'
 import './customCCP/index.less'
 import AgentOnCall from './dashboard/onCall';
-import { Button, Dropdown, List, Modal, notification, Skeleton, Space, theme, Avatar, Spin, Typography } from 'antd';
+import { Button, Dropdown, List, Modal, notification, Skeleton, Space, theme, Avatar, Spin, Typography, Input } from 'antd';
 import { UserOutlined, InfoCircleOutlined, UsergroupDeleteOutlined, AlertOutlined, TeamOutlined } from '@ant-design/icons';
 import teams from '../images/teams.png'
 import { getTopCallRequest } from '../api';
+import axios from 'axios';
 
 
 const AppIndexPage = (props) => {
     const { supervisor } = props
+    const [MSTeamsUsers, setMSTeamsUsers] = useState([])
     const ccp = useRef(null);
     const [ccpInitiated, setCcpInitiated] = useState(false);
     const [onCall, setonCall] = useState(false);
@@ -143,6 +145,20 @@ const AppIndexPage = (props) => {
             }
         });
     }
+    const searchTeamsUsers = (e) => {
+        axios.get(`https://td7y4pmq4a.execute-api.us-east-1.amazonaws.com/staging/api/users?displayName=${e.target.value}&tenantId=4aed8dae-5d5c-4a2f-a6c8-64f94dfa89f6`).then((res) => {
+            if (res.data.users?.value) {
+                setMSTeamsUsers(res.data.users.value)
+            }
+        })
+    }
+    const searchTeamsUsersKeyUp = (e) => {
+        if (e.target.value.length > 2) {
+            console.log({ e: e.target.value });
+            searchTeamsUsers(e)
+        }
+
+    }
     const items = [
         {
             key: '1',
@@ -160,7 +176,8 @@ const AppIndexPage = (props) => {
 
 
     const checkTeamsAvailibility = (payload) => {
-        console.log({payload});
+        console.log({ payload });
+        // showig the pipup to the user to select the teams user
         setState({ ...state, teamsInitiated: true })
         let pollints = setInterval(() => {
             getTopCallRequest().then((res) => {
@@ -169,14 +186,13 @@ const AppIndexPage = (props) => {
                 if (items == 0) {
                     clearInterval(pollints)
                     makeTeamsCall(payload)
-
                 }
             })
         }, 3000);
     }
 
     const makeTeamsCall = (payload) => {
-        console.log({payload});
+        console.log({ payload });
         const options = {
             method: "POST",
             headers: {
@@ -186,7 +202,8 @@ const AppIndexPage = (props) => {
                 "from": "connect1",
                 "to": {
                     "displayname": payload.displayName,
-                    "id": payload.id
+                    "id": payload.id,
+                    "tenantId": "4aed8dae-5d5c-4a2f-a6c8-64f94dfa89f6"
                 }
             }),
         };
@@ -207,13 +224,13 @@ const AppIndexPage = (props) => {
     }
 
     const performQuickConnect = (item) => {
-        var endpoint = connect.Endpoint.byPhoneNumber('+16028122928');   
+        var endpoint = connect.Endpoint.byPhoneNumber('+16028122928');
         contact.addConnection(endpoint, {
             success: function () {
                 console.log("Presolved::connect::contact::addConnection::success::",);
                 setState({ ...state, teamsInitiated: false })
                 setShowTeamsModal(false)
-                notification.success({ 
+                notification.success({
                     message: "Call transfered to Teams",
                     description: "Call transfered to Teams",
                 })
@@ -246,34 +263,57 @@ const AppIndexPage = (props) => {
                 <Modal width={640} title="Connect to Teams" open={showTeamsModal} closable onCancel={() => setShowTeamsModal(!showTeamsModal)}>
                     {
                         state.teamsInitiated ?
-                            <div style={{padding:'50px 0'}}> 
+                            <div style={{ padding: '50px 0' }}>
                                 <Space direction='vertical' align='center'>
                                     <Spin size='large' />
                                     <Typography.Title level={3}>Please wait while we Connect to MS Team . . .</Typography.Title>
                                 </Space>
                             </div>
                             :
-                            <List
-                                className="demo-loadmore-list"
-                                itemLayout="horizontal"
-                                dataSource={MSTeamsUsers}
-                                renderItem={(item) => (
-                                    <List.Item
-                                        actions={[<Button onClick={() => checkTeamsAvailibility(item)} size='large' block type='default' icon={<img src={teams} height={30} style={{ margin: '0 10px ' }} />} >
-                                            Connect
-                                        </Button>]}
-                                    >
-                                        <Skeleton avatar title={false} loading={item.loading} active>
-                                            <List.Item.Meta
-                                                avatar={<Avatar size={70} icon={<UserOutlined />} />}
-                                                title={`MS Teams - ${item.displayName}`}
-                                                description={`Email - ${item.mail} preferredLanguage: ${item.preferredLanguage}`}
-                                            />
+                            <div>
+                                <div style={{padding:'15px 0'}}>
+                                <Input.Search placeholder='Search Teams Users' onSearch={searchTeamsUsers} onKeyDown={searchTeamsUsersKeyUp} enterButton allowClear />
+                                </div>
+                                {/* 
+                                    "businessPhones": ["919052234524"], 
+                                    "displayName": "Sai Krishnan",
+                                     "givenName": "Sai", 
+                                     "jobTitle": null, 
+                                     "mail": "saikrishnan@rn0j.onmicrosoft.com", 
+                                     "mobilePhone": null, 
+                                     "officeLocation": null, 
+                                     "preferredLanguage": null,
+                                      "surname": "Krishnan", 
+                                      "userPrincipalName": 
+                                      "saikrishnan@rn0j.onmicrosoft.com", 
+                                      "id": "84d63063-0892-426f-96ed-da78b2097e60" 
+                                */}
+                                <List
+                                    className="demo-loadmore-list"
+                                    itemLayout="horizontal"
+                                    dataSource={MSTeamsUsers}
+                                    renderItem={(item) => (
+                                        <List.Item
+                                            actions={[<Button onClick={() => checkTeamsAvailibility(item)} size='large' block type='default' icon={<img src={teams} height={20} style={{ margin: '0 10px ' }} />} >
+                                                Connect
+                                            </Button>]}
+                                        >
+                                            <Skeleton avatar title={false} loading={item.loading} active>
+                                                <List.Item.Meta
+                                                    avatar={<Avatar size={70} icon={<UserOutlined />} />}
+                                                    title={`${item.displayName}`}                                                    
+                                                    description={item.jobTitle ? <Space>
+                                                        <span> {item.jobTitle} </span>
+                                                        <span> {item.officeLocation} </span>
 
-                                        </Skeleton>
-                                    </List.Item>
-                                )}
-                            />
+                                                    </Space>: false }
+                                                />
+
+                                            </Skeleton>
+                                        </List.Item>
+                                    )}
+                                />
+                            </div>
                     }
                 </Modal>
             </div>
@@ -293,74 +333,3 @@ export default AppIndexPage
 
 // +1 602-812-2928
 
-const MSTeamsUsers = [
-    {
-        "businessPhones": [],
-        "displayName": "Khizar Ahmed",
-        "givenName": "Khizar",
-        "jobTitle": null,
-        "mail": "a.khizar@p3fusion.com",
-        "mobilePhone": null,
-        "officeLocation": null,
-        "preferredLanguage": "en-US",
-        "surname": "Ahmed",
-        "userPrincipalName": "a.khizar@p3fusion.com",
-        "id": "6ff1f1e4-74d0-4652-b9ce-47b54bab8d6b"
-    },
-
-
-    {
-        "businessPhones": [],
-        "displayName": "Sai Krishnan",
-        "givenName": "Sai",
-        "jobTitle": null,
-        "mail": "k.sai@p3fusion.com",
-        "mobilePhone": null,
-        "officeLocation": null,
-        "preferredLanguage": null,
-        "surname": "Krishnan",
-        "userPrincipalName": "k.sai@p3fusion.com",
-        "id": "98cf9c0c-46b4-4a68-8fc0-a6789482e068"
-    },
-
-    {
-        "businessPhones": [],
-        "displayName": "Premavathi Periasami",
-        "givenName": "Premavathi",
-        "jobTitle": null,
-        "mail": "p.prema@p3fusion.com",
-        "mobilePhone": null,
-        "officeLocation": null,
-        "preferredLanguage": null,
-        "surname": "Periasami",
-        "userPrincipalName": "p.prema@p3fusion.com",
-        "id": "9bed9874-24bb-469d-a45f-ad7ad74ffd39"
-    },
-
-    {
-        "businessPhones": [],
-        "displayName": "Siva Thangavel",
-        "givenName": "Siva",
-        "jobTitle": null,
-        "mail": "t.siva@p3fusion.com",
-        "mobilePhone": null,
-        "officeLocation": null,
-        "preferredLanguage": "en-IN",
-        "surname": "Thangavel",
-        "userPrincipalName": "t.siva@p3fusion.com",
-        "id": "848c9bb7-36b9-46f1-af04-662a0c379c1b"
-    },
-    {
-        "businessPhones": [],
-        "displayName": "Venkat Ramasamy",
-        "givenName": "Venkat",
-        "jobTitle": null,
-        "mail": "venkat.ramasamy@p3fusion.com",
-        "mobilePhone": null,
-        "officeLocation": null,
-        "preferredLanguage": "en-US",
-        "surname": "Ramasamy",
-        "userPrincipalName": "venkat.ramasamy@p3fusion.com",
-        "id": "0c57cef7-bce7-425b-9547-3fc9477ff9c3"
-    }
-]
